@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: audit-service
+  namespace: gps-services
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: audit-service
+  template:
+    metadata:
+      labels:
+        app: audit-service
+    spec:
+      containers:
+        - name: audit-service
+          image: simon-audit-service:latest
+          command: ["sh", "-c", "npx prisma migrate deploy && node dist/main.js"]
+          env:
+            - name: DATABASE_URL
+              value: postgresql://postgres:postgres@db:5432/auditdb
+          ports:
+            - containerPort: 3003
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: audit-service
+  namespace: gps-services
+spec:
+  selector:
+    app: audit-service
+  type: NodePort
+  ports:
+    - port: 3003
+      targetPort: 3003
+      nodePort: 30003

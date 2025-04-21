@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: global-config
+  namespace: gps-services
+data:
+  REDIS_HOST: redis
+  REDIS_PORT: "6379"
+  AUDIT_SERVICE_URL: http://audit-service:3003
+  ROUTING_SERVICE_URL: http://routing-service:3002

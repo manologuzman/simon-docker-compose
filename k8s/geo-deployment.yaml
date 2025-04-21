@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: geo-service
+  namespace: gps-services
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: geo-service
+  template:
+    metadata:
+      labels:
+        app: geo-service
+    spec:
+      containers:
+        - name: geo-service
+          image: simon-geo-service:latest
+          envFrom:
+            - configMapRef:
+                name: global-config
+          ports:
+            - containerPort: 3001
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: geo-service
+  namespace: gps-services
+spec:
+  selector:
+    app: geo-service
+  type: NodePort
+  ports:
+    - port: 3001
+      targetPort: 3001
+      nodePort: 30001
