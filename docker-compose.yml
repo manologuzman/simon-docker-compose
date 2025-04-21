@@ -24,7 +24,7 @@ services:
       - '3003:3003'
     environment:
       DATABASE_URL: postgresql://postgres:postgres@db:5432/auditdb
-    command: sh -c "npx prisma migrate deploy && node dist/main.js"
+    command: sh -c "npm run build && npx prisma migrate deploy && node dist/main.js"
     volumes:
       - ./audit-service:/app
       - /app/node_modules
